@@ -1,0 +1,23 @@
+[build-system]
+requires = ["pdm-backend"]
+build-backend = "pdm.backend"
+
+[project]
+name = "elite-dangerous-stats-summary"
+version = "0.1.0"
+description = "Statistics and summary for Elite Dangerous"
+authors = [
+    { name = "stefanlight8", email = "64615032+stefanlight8@users.noreply.github.com" }
+]
+requires-python = ">=3.13"
+dependencies = [
+    "edss-backend",
+    "edss-journal",
+]
+
+[tool.uv.workspace]
+members = ["packages/edss-*"]
+
+[tool.uv.sources]
+edss-backend = { workspace = true }
+edss-journal = { workspace = true }

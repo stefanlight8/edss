@@ -1,0 +1,17 @@
+[build-system]
+requires = ["pdm-backend"]
+build-backend = "pdm.backend"
+
+[project]
+name = "edss-journal"
+version = "0.1.0"
+description = "Utility for reading journals from Elite Dangerous"
+authors = [
+    { name = "stefanlight8", email = "64615032+stefanlight8@users.noreply.github.com" }
+]
+requires-python = ">=3.13"
+dependencies = [
+    "aiofiles>=24.1.0",
+    "msgspec>=0.19.0",
+    "watchdog>=6.0.0",
+]

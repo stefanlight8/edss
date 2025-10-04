@@ -32,7 +32,6 @@ class EventFactory:
     @staticmethod
     def create(payload: bytes | bytearray | memoryview[int] | str) -> BaseEvent | None:
         event_payload: Mapping[str, typing.Any] = json.decode(payload)
-        print(event_payload)
         if event_name := event_payload.get("event"):
             if event_type := EVENT_MAP.get(event_name):
                 return convert(event_payload, type=event_type)

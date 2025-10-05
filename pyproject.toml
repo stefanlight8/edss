@@ -9,6 +9,7 @@ description = "Statistics and summary for Elite Dangerous"
 authors = [
     { name = "stefanlight8", email = "64615032+stefanlight8@users.noreply.github.com" }
 ]
+license = { file = "LICENSE" }
 requires-python = ">=3.13"
 dependencies = [
     "edss-backend",

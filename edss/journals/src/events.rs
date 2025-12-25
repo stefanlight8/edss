@@ -1,13 +1,13 @@
 use chrono::{DateTime, Local};
 use serde::{Deserialize, Serialize};
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct BaseEvent {
-    timestamp: DateTime<Local>,
+    pub timestamp: DateTime<Local>,
 }
 
-#[derive(Serialize, Deserialize)]
-#[serde(tag = "event", rename_all = "PascalCase")]
+#[derive(Serialize, Deserialize, Debug)]
+#[serde(tag = "event", rename_all_fields = "PascalCase")]
 pub enum Event {
     Commander {
         #[serde(flatten)]
@@ -50,7 +50,7 @@ pub enum Event {
         #[serde(flatten)]
         base: BaseEvent,
         total_reward: usize,
-        victim_faction: String,
+        victim_faction: Option<String>,
     },
     FactionKillBond {
         #[serde(flatten)]
@@ -61,7 +61,7 @@ pub enum Event {
     CodexEntry {
         #[serde(flatten)]
         base: BaseEvent,
-        voucher_amount: usize,
+        voucher_amount: Option<usize>,
     },
     DatalinkVoucher {
         #[serde(flatten)]
@@ -69,18 +69,11 @@ pub enum Event {
         reward: usize,
         payee_faction: String,
     },
-    RedeemVoucher {
-        #[serde(flatten)]
-        base: BaseEvent,
-        amount: usize,
-        factions: Vec<String>,
-        faction: String,
-    },
     MissionCompleted {
         #[serde(flatten)]
         base: BaseEvent,
-        donated: usize,
-        reward: usize,
+        donated: Option<usize>,
+        reward: Option<usize>,
     },
     SearchAndRescue {
         #[serde(flatten)]
@@ -105,7 +98,7 @@ pub enum Event {
     MarketSell {
         #[serde(flatten)]
         base: BaseEvent,
-        #[serde(alias = "type")]
+        #[serde(alias = "Type")]
         target: String,
     },
     SellDrones {
@@ -137,7 +130,7 @@ pub enum Event {
     MarketBuy {
         #[serde(flatten)]
         base: BaseEvent,
-        #[serde(alias = "type")]
+        #[serde(alias = "Type")]
         target: String,
     },
     BuyWeapon {
@@ -198,4 +191,6 @@ pub enum Event {
         #[serde(flatten)]
         base: BaseEvent,
     },
+    #[serde(other)]
+    Unknown,
 }

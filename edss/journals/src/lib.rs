@@ -1,4 +1,4 @@
-mod events;
+pub mod events;
 
 use std::fs;
 use std::path::PathBuf;
@@ -10,8 +10,10 @@ pub fn read_journal(path: PathBuf) -> Result<Vec<Event>> {
     let file: String = fs::read_to_string(path)?;
     let mut events: Vec<Event> = vec![];
     for line in file.lines() {
-        let event: Event = serde_json::from_str(line)?;
-        let _ = &events.push(event);
+        match serde_json::from_str::<Event>(line) {
+            Ok(value) => events.push(value),
+            Err(err) => eprintln!("failed to decode: {}\n{}", err, line),
+        }
     }
     Ok(events)
 }

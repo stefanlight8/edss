@@ -2,21 +2,29 @@ use chrono::{DateTime, Local};
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Debug)]
-pub struct BaseEvent {
+pub struct Event {
     pub timestamp: DateTime<Local>,
+    #[serde(flatten)]
+    pub event: EventKind,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(tag = "event", rename_all_fields = "PascalCase")]
-pub enum Event {
+pub enum EventKind {
     Commander {
-        #[serde(flatten)]
-        base: BaseEvent,
         name: String,
     },
+    LoadGame {
+        commander: String,
+        ship: Option<String>,
+        #[serde(alias = "Ship_Localised")]
+        ship_localised: Option<String>,
+        ship_name: Option<String>,
+        #[serde(alias = "ShipID")]
+        ship_id: Option<usize>,
+        credits: usize,
+    },    
     Progress {
-        #[serde(flatten)]
-        base: BaseEvent,
         combat: u8,
         trade: u8,
         explore: u8,
@@ -26,171 +34,210 @@ pub enum Event {
         federation: u8,
     },
     Reputation {
-        #[serde(flatten)]
-        base: BaseEvent,
         empire: f32,
         federation: f32,
         independent: f32,
         alliance: f32,
     },
+    Loadout {
+        ship: Option<String>,
+        ship_name: Option<String>,
+        #[serde(alias = "ShipID")]
+        ship_id: Option<usize>,
+    },
+    Screenshot,
+    Scan {
+        scan_type: String,
+        was_discovered: bool,
+        was_footfalled: Option<bool>,
+    },
+    ScanBaryCentre {
+        star_system: String,
+        #[serde(alias = "BodyID")]
+        body_id: u16,
+    },
+    FSSAllBodiesFound {
+        system_name: String,
+        count: u16,
+    },
+    SAAScanComplete {
+        efficiency_target: u32,
+    },
+    ScanOrganic {
+        scan_type: String,
+        genus: String,
+        #[serde(alias = "Genus_Localised")]
+        genus_localised: String,
+        species: String,
+        #[serde(alias = "Species_Localised")]
+        species_localised: String,
+        was_logged: Option<bool>,
+        variant: String,
+        #[serde(alias = "Variant_Localised")]
+        variant_localised: String
+    },
+    FSDJump {
+        star_system: String,
+        star_pos: [f32; 3],
+        jump_dist: f32,
+    },
+    Docked {
+        station_name: String,
+        star_system: Option<String>,
+        star_pos: Option<[f32; 3]>,
+    },
+    Undocked,
+    Location {
+        star_system: String,
+        star_pos: [f32; 3],
+        body: Option<String>,
+        station_name: Option<String>,
+    },
+    ShipyardSwap {
+        ship_type: String,
+        #[serde(alias = "ShipType_Localised")]
+        ship_type_localised: Option<String>,
+        ship_name: Option<String>,
+        #[serde(alias = "ShipID")]
+        ship_id: Option<usize>,
+    },
     Powerplay {
-        #[serde(flatten)]
-        base: BaseEvent,
         rank: u16,
         merits: usize,
     },
     PowerplayMerits {
-        #[serde(flatten)]
-        base: BaseEvent,
         power: String,
         merits_gained: u16,
         total_merits: usize,
     },
     Bounty {
-        #[serde(flatten)]
-        base: BaseEvent,
         total_reward: usize,
         victim_faction: Option<String>,
     },
     FactionKillBond {
-        #[serde(flatten)]
-        base: BaseEvent,
         reward: usize,
         awarding_faction: String,
     },
+    PVPKill {
+        victim: String,
+    },
     CodexEntry {
-        #[serde(flatten)]
-        base: BaseEvent,
+        region: String,
+        #[serde(alias = "Region_Localised")]
+        region_localised: String,
         voucher_amount: Option<usize>,
     },
     DatalinkVoucher {
-        #[serde(flatten)]
-        base: BaseEvent,
         reward: usize,
         payee_faction: String,
     },
     MissionCompleted {
-        #[serde(flatten)]
-        base: BaseEvent,
         donated: Option<usize>,
         reward: Option<usize>,
     },
     SearchAndRescue {
-        #[serde(flatten)]
-        base: BaseEvent,
         reward: usize,
     },
+    SellExplorationData {
+        total_earnings: usize,
+    },
+    SellOrganicData {
+        bio_data: Vec<OrganicSale>,
+    },
     MultiSellExplorationData {
-        #[serde(flatten)]
-        base: BaseEvent,
         total_earnings: usize,
     },
     ModuleSell {
-        #[serde(flatten)]
-        base: BaseEvent,
         sell_price: usize,
     },
     ModuleSellRemote {
-        #[serde(flatten)]
-        base: BaseEvent,
         sell_price: usize,
     },
     MarketSell {
-        #[serde(flatten)]
-        base: BaseEvent,
         #[serde(alias = "Type")]
         target: String,
     },
     SellDrones {
-        #[serde(flatten)]
-        base: BaseEvent,
         sell_price: usize,
         total_sale: usize,
     },
     ShipyardSell {
-        #[serde(flatten)]
-        base: BaseEvent,
         ship_price: usize,
     },
     ShipyardBuy {
-        #[serde(flatten)]
-        base: BaseEvent,
         ship_price: usize,
     },
     ModuleBuy {
-        #[serde(flatten)]
-        base: BaseEvent,
         buy_price: usize,
     },
     BuyDrones {
-        #[serde(flatten)]
-        base: BaseEvent,
         buy_price: usize,
     },
     MarketBuy {
-        #[serde(flatten)]
-        base: BaseEvent,
         #[serde(alias = "Type")]
         target: String,
     },
     BuyWeapon {
-        #[serde(flatten)]
-        base: BaseEvent,
         price: usize,
     },
     RefuelAll {
-        #[serde(flatten)]
-        base: BaseEvent,
         cost: usize,
     },
     RepairAll {
-        #[serde(flatten)]
-        base: BaseEvent,
         cost: usize,
     },
     Repair {
-        #[serde(flatten)]
-        base: BaseEvent,
         cost: usize,
     },
     BuyAmmo {
-        #[serde(flatten)]
-        base: BaseEvent,
         cost: usize,
     },
     NpcCrewPaidWage {
-        #[serde(flatten)]
-        base: BaseEvent,
         amount: usize,
     },
     PayFines {
-        #[serde(flatten)]
-        base: BaseEvent,
         amount: usize,
     },
     PayBounties {
-        #[serde(flatten)]
-        base: BaseEvent,
         amount: usize,
     },
     SelfDestruct {
-        #[serde(flatten)]
-        base: BaseEvent,
     },
     Resurrect {
-        #[serde(flatten)]
-        base: BaseEvent,
         cost: usize,
     },
     RestockVehicle {
-        #[serde(flatten)]
-        base: BaseEvent,
         cost: usize,
     },
-    Died {
-        #[serde(flatten)]
-        base: BaseEvent,
+    Disembark {
+        #[serde(alias = "SRV")]
+        srv: bool,
     },
+    Embark {
+        #[serde(alias = "SRV")]
+        srv: bool,
+    },
+    Died {
+        killer_name: Option<String>,
+        killer_ship: Option<String>,
+        killers: Option<Vec<Killer>>,
+    },
+    Shutdown,
     #[serde(other)]
     Unknown,
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+#[serde(rename_all = "PascalCase")]
+pub struct OrganicSale {
+    pub genus: String,
+    pub species: String,
+    pub value: u64,
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+#[serde(rename_all = "PascalCase")]
+pub struct Killer {
+    name: String,
+    ship: String,
 }

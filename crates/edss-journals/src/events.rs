@@ -57,7 +57,8 @@ pub enum Event {
     },
     Fileheader {
         odyssey: bool,
-        gameversion: String,
+        #[serde(alias = "gameversion")]
+        game_version: String,
     },
     FSDJump {
         jump_dist: f64,

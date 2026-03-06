@@ -40,8 +40,16 @@ impl Runtime {
 
         for journal_path in journals {
             let mut reader = JournalReader::open(&journal_path).await?;
-            let Ok(first) = reader.read_first().await else {
-                continue;
+            let first = match reader.read_first().await {
+                Ok(entry) => entry,
+                Err(e) => {
+                    tracing::warn!(
+                        "skipped {} because of error: {:?}",
+                        journal_path.display(),
+                        e
+                    );
+                    continue;
+                }
             };
             let timestamp = first.timestamp;
             sessions.push(GameSessionMeta {

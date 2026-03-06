@@ -4,6 +4,7 @@ resolver = "3"
 
 [workspace.package]
 edition = "2024"
+license_file = "LICENSE"
 
 [workspace.dependencies]
 edss-gui = { path = "crates/edss-gui" }

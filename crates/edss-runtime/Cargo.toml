@@ -1,0 +1,12 @@
+[package]
+name = "edss-runtime"
+version = "0.1.0"
+edition.workspace = true
+
+[dependencies]
+edss-journals = {workspace = true}
+edss-sessions = {workspace = true}
+edss-rpc = {workspace = true}
+anyhow = {workspace = true}
+tokio = {workspace = true}
+tracing = {workspace = true}

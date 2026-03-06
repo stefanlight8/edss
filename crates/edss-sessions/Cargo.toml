@@ -1,0 +1,11 @@
+[package]
+name = "edss-sessions"
+version = "0.1.0"
+edition.workspace = true
+
+[dependencies]
+edss-journals = {workspace = true}
+tracing = {workspace = true}
+chrono = {workspace = true}
+tokio = {workspace = true}
+anyhow = {workspace = true}

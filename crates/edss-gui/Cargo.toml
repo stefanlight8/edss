@@ -1,0 +1,14 @@
+[package]
+name = "edss-gui"
+version = "0.1.0"
+edition.workspace = true
+
+[dependencies]
+edss-runtime = {workspace = true}
+edss-rpc = {workspace = true}
+edss-sessions = {workspace = true}
+anyhow = {workspace = true}
+tokio = {workspace = true}
+tracing = {workspace = true}
+egui = "0.33.3"
+eframe = "0.33.3"

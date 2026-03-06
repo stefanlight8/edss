@@ -1,0 +1,13 @@
+[package]
+name = "edss-app"
+version = "0.1.0"
+edition.workspace = true
+
+[dependencies]
+edss-gui = {workspace = true}
+edss-runtime = {workspace = true}
+edss-rpc = {workspace = true}
+tokio.workspace = true
+tracing.workspace = true
+tracing-subscriber.workspace = true
+eframe = "0.33.3"

@@ -1,0 +1,9 @@
+[package]
+name = "edss-rpc"
+version = "0.1.0"
+edition.workspace = true
+
+[dependencies]
+edss-sessions = {workspace = true}
+anyhow = {workspace = true}
+tokio = {workspace = true}

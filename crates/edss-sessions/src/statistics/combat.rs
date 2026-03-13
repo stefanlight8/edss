@@ -3,6 +3,7 @@ use {
     edss_journals::events::Event,
 };
 
+#[derive(Debug, Default)]
 pub struct CombatStatistics {
     pub npc_kills: u64,
 
@@ -32,8 +33,16 @@ impl CombatStatistics {
 impl EventHandler for CombatStatistics {
     fn handle(&mut self, event: &Event) {
         match event {
-            Event::Bounty { total_reward, .. } => self.bounties_gained += total_reward,
-            Event::FactionKillBond { reward, .. } => self.combat_bounds_gained += reward,
+            Event::Bounty { total_reward, .. } => {
+                self.bounties_gained += total_reward;
+                self.npc_kills += 1;
+            }
+            Event::FactionKillBond { reward, .. } => {
+                self.combat_bounds_gained += reward;
+                self.npc_kills += 1
+            }
+            // faction kill bond doesn't gurantee that it was received from npc kill
+            // so npc kills is a approximately amount
             Event::PVPKill => self.pvp_kills += 1,
             Event::Died {
                 killer_name: Some(killer_name),

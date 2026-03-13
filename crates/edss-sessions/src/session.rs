@@ -1,8 +1,12 @@
-use std::path::PathBuf;
-
-use anyhow::{Context, Result};
-use chrono::{DateTime, Local};
-use edss_journals::{JournalEntry, reader::JournalReader};
+use {
+    crate::statistics::{
+        combat::CombatStatistics, event_handler::EventHandler, thargoids::ThargoidStatistics,
+    },
+    anyhow::{Context, Result},
+    chrono::{DateTime, Local},
+    edss_journals::{JournalEntry, reader::JournalReader},
+    std::path::PathBuf,
+};
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct GameSessionMeta {
@@ -16,6 +20,9 @@ pub struct GameSession {
 
     pub commander_name: Option<String>,
     pub odyssey: bool,
+
+    pub combat_statistics: CombatStatistics,
+    pub thargoid_statistics: ThargoidStatistics,
 }
 
 impl GameSession {
@@ -34,19 +41,27 @@ impl GameSession {
         Ok(session)
     }
 
-    pub async fn compile(events: Vec<JournalEntry>) -> Self {
-        let duration = if events.len() >= 2 {
-            let (first, last) = (events.first().unwrap(), events.last().unwrap());
+    pub async fn compile(entries: Vec<JournalEntry>) -> Self {
+        let duration = if entries.len() >= 2 {
+            let (first, last) = (entries.first().unwrap(), entries.last().unwrap());
 
             (last.timestamp - first.timestamp).as_seconds_f32()
         } else {
             0.0
         };
 
-        Self {
+        let mut session = GameSession {
             duration,
-            commander_name: None,
-            odyssey: false,
+            ..Default::default()
+        };
+
+        for entry in entries {
+            session.combat_statistics.handle(&entry.event);
+            session.thargoid_statistics.handle(&entry.event);
         }
+
+        println!("{:?}", session);
+
+        session
     }
 }

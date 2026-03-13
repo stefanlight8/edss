@@ -1,6 +1,6 @@
-use serde::{Deserialize, Serialize};
+use serde::Deserialize;
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Deserialize, Debug)]
 #[serde(tag = "event", rename_all_fields = "PascalCase")]
 pub enum Event {
     BookTaxi {
@@ -155,14 +155,14 @@ pub enum Event {
     Unknown,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Deserialize, Debug)]
 #[serde(rename_all = "PascalCase")]
 pub struct Reward {
     pub faction: String,
     pub reward: u64,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Deserialize, Debug)]
 #[serde(rename_all = "PascalCase")]
 pub struct Killer {
     pub name: String,
